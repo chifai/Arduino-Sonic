@@ -1,2 +1,6 @@
 # Arduino-Sonic
-SRF05 sonic sensors can be triggered at the same time
+
+2019-07-01: v1.0.0 註解
+- 以下以更底層的控制方法編寫程式, 可同時啟動多個SRF04超音波感測器
+- 讀取A0及A1為量測電流/電壓的pin
+- 將4顆超音波及A0, A1的值以UART形式傳送
