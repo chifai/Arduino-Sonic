@@ -3,13 +3,13 @@
 //讀取A0及A1為量測電流/電壓的pin
 //將4顆超音波及A0, A1的值以UART形式傳送
 
-const int SonicNo = 4;
-const int TRI_PIN[SonicNo] = {4,8,64,128};
-const int ECH_PIN[SonicNo] = {4,5,8,9};
-const int LP_DEG = 16;
-const int MsgNo = 7;
+const int SonicNo = 4;                      //number of sonic 
+const int TRI_PIN[SonicNo] = {4,8,64,128};  //Sonic trigger pins
+const int ECH_PIN[SonicNo] = {4,5,8,9};     //Sonic echo pins
+const int LP_DEG = 16;                      //Low Pass filter magnitude
+const int MsgNo = 7;                        //Total message number
 const int MOTOR_SW = 10;
-String CVMsg[MsgNo];
+String CVMsg[MsgNo];                        //Message string sent to main controller
 byte sonicDist[SonicNo];
 
 void setup() {
@@ -36,7 +36,6 @@ void loop() {
   loopNo %= SonicNo;
 
   //Read the voltage and current
-  
   curr1 = analogRead(A0);
   volt1 = analogRead(A1);
   curr0 = (curr0 * (LP_DEG - 1) + curr1) / LP_DEG;
@@ -64,17 +63,7 @@ void loop() {
   }
   
   }
-
-
-
-
-
   
-//  CVMsg[0] = curr0 >> 5;
-//  CVMsg[1] = curr0 & B00011111;
-//  CVMsg[2] = volt0 >> 5;
-//  CVMsg[3] = volt0 & B00011111;  
-
   #ifdef DEBUG
   if (loopNo == 0)
   {
@@ -99,12 +88,7 @@ void loop() {
     Serial.println();
   }
   #endif
-
   //END of DEBUG
-
-
-
-  
 }
 
 int getSonic(int pinNo)                        //return the pointers of sonic distances, BackUp function
