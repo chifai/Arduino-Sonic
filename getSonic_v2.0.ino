@@ -1,24 +1,21 @@
-//2019-07-01: v1.0.0 註解
+//2019-07-09: v1.0.0 註解
 //以下以更底層的控制方法編寫程式, 可同時啟動多個SRF04超音波感測器
 //讀取A0及A1為量測電流/電壓的pin
-//將4顆超音波及A0, A1的值以UART形式傳送
-
-const int SonicNo = 4;                      //number of sonic 
-const int TRI_PIN[SonicNo] = {4,8,64,128};  //Sonic trigger pins
-const int ECH_PIN[SonicNo] = {4,5,8,9};     //Sonic echo pins
-const int LP_DEG = 16;                      //Low Pass filter magnitude
-const int MsgNo = 7;                        //Total message number
-const int MOTOR_SW = 10;
-String CVMsg[MsgNo];                        //Message string sent to main controller
+//將6顆超音波及A0, A1的值以UART形式傳送
+//更改TRI_PIN , ECH_PIN ,DDRD,CV_Msg print
+const int SonicNo = 6;
+const int TRI_PIN[SonicNo] = {4,8,16,32,64,128};
+const int ECH_PIN[SonicNo] = {8,9,10,11,12,13};
+const int LP_DEG = 16;
+const int MsgNo = 9;
+String CVMsg[MsgNo];
 byte sonicDist[SonicNo];
 
 void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
-  DDRD = B11001100;
-  DDRB = B11111100; 
-  pinMode(MOTOR_SW,OUTPUT);
-  digitalWrite(MOTOR_SW,1);
+  DDRD = B11111111;
+  DDRB = B11000000; 
 }
 
 void loop() {
@@ -36,6 +33,7 @@ void loop() {
   loopNo %= SonicNo;
 
   //Read the voltage and current
+  
   curr1 = analogRead(A0);
   volt1 = analogRead(A1);
   curr0 = (curr0 * (LP_DEG - 1) + curr1) / LP_DEG;
@@ -50,9 +48,9 @@ void loop() {
     for (int i = 0; i<SonicNo; i++)
       CVMsg[i] = String(sonicDist[i]);
       
-    CVMsg[4] = String(curr0);
-    CVMsg[5] = String(volt0);
-    CVMsg[6] = String(duration);
+    CVMsg[6] = String(curr0);
+    CVMsg[7] = String(volt0);
+    CVMsg[8] = String(duration);
   for (int i = 0; i<MsgNo; i++)
   {
     Serial.print(CVMsg[i]);
@@ -63,7 +61,12 @@ void loop() {
   }
   
   }
-  
+
+//  CVMsg[0] = curr0 >> 5;
+//  CVMsg[1] = curr0 & B00011111;
+//  CVMsg[2] = volt0 >> 5;
+//  CVMsg[3] = volt0 & B00011111;  
+
   #ifdef DEBUG
   if (loopNo == 0)
   {
@@ -79,7 +82,7 @@ void loop() {
     Serial.print(',');
     Serial.print(volt0);
     Serial.print('\t');
-    for (int i = 0; i<4; i++)
+    for (int i = 0; i<6; i++)
     {
     Serial.print(CVMsg[i]);
     Serial.print('\t');
@@ -88,7 +91,12 @@ void loop() {
     Serial.println();
   }
   #endif
+
   //END of DEBUG
+
+
+
+  
 }
 
 int getSonic(int pinNo)                        //return the pointers of sonic distances, BackUp function
