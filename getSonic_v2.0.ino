@@ -8,7 +8,6 @@ const int TRI_PIN[SonicNo] = {4,8,64,128};  //Sonic trigger pins
 const int ECH_PIN[SonicNo] = {4,5,8,9};     //Sonic echo pins
 const int LP_DEG = 16;                      //Low Pass filter magnitude
 const int MsgNo = 7;                        //Total message number
-const int MOTOR_SW = 10;
 String CVMsg[MsgNo];                        //Message string sent to main controller
 byte sonicDist[SonicNo];
 
@@ -16,9 +15,7 @@ void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
   DDRD = B11001100;
-  DDRB = B11111100; 
-  pinMode(MOTOR_SW,OUTPUT);
-  digitalWrite(MOTOR_SW,1);
+  DDRB = B11111100;
 }
 
 void loop() {
